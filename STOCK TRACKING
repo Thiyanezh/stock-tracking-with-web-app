@@ -1,0 +1,153 @@
+import time
+import pandas as pd
+import streamlit as st
+from PIL import Image
+from streamlit_option_menu import option_menu
+from nsetools import Nse
+import requests
+from streamlit_lottie import st_lottie
+import yfinance as yf
+
+
+def load_lottie(url):
+    r = requests.get(url)
+    if r.status_code != 200:
+        return None
+    return r.json()
+
+
+lottie_coding = load_lottie("https://assets8.lottiefiles.com/packages/lf20_i2eyukor.json")
+lottie_coding_1 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_rMIWDc0fSB.json")
+lottie_coding_2 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_ky2ondsa.json")
+lottie_coding_3 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_cohxzcyi.json")
+lottie_coding_4 = load_lottie("https://assets7.lottiefiles.com/private_files/lf30_F3v2Nj.json")
+selected = option_menu(
+    menu_title=None,
+    options=["Home", "Investment idea", "IND Stock tracking", "US stocks tracking"],
+    icons=["house", "lightbulb", "coin", "coin"],
+    orientation='horizontal',
+)
+if selected == "Home":
+    st.header('STOCK TRACKING AND INVESTMENT IDEAS')
+    st.write("\n\n")
+    c1, c2 = st.columns(2)
+    with c2:
+        st_lottie(lottie_coding_1, height=300, key="coding")
+    with c1:
+        with st.container():
+            st.write("<h4>A stock of a company is essentially a type of financial instrument that offers a\ndegree of "
+                     "ownership in the company, as well as a claim on its assets and profits.\nStocks are given out by "
+                     "companies at a specific rate per share to interested\ninvestors for a variety of purposes such "
+                     "as "
+                     "raising capital, funding expansion or paying off the company's debts.", unsafe_allow_html=True)
+    with st.container():
+        with c2:
+            st.subheader('KEY TAKEAWAYS')
+            st.write("📌 Investing is the act of committing money or capital to an endeavor with the expectation of "
+                     "obtaining additional income or profit.")
+            st.write("📌 Unlike consuming, investing puts money to work so it can grow overtime.")
+            st.write("📌 However, investing also comes with the risk of losses.")
+            st.write("📌 The stock market is a common way for investors, no matter their experience, to invest for a "
+                     "lifetime.")
+            st.write("📌 Beginning investors can get help from expert advisors, leave their portfolio selection and "
+                     "management to robo-advisors, or take a DIY approach to investing in stocks")
+    with c1:
+        st.markdown("###")
+        st_lottie(lottie_coding, height=300, key="streak")
+if selected == "Investment idea":
+    st.subheader('INVESTMENT IDEAS')
+    n = st.number_input('enter you salary')
+    p = st.number_input('enter the amount you can invest')
+    st.write("\n")
+    st.write("\n")
+    c1, c2 = st.columns(2)
+    with c1:
+        low = st.button('low risk')
+        if low:
+            st.success(f"invest {p * .2} in stocks")
+            st.success(
+                f"invest {p * .6} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
+            st.success(f"invest {p * .2} in mutual funds(comparatively less risk in NIFTY50)")
+        medium = st.button('medium risk')
+        if medium:
+            st.success(f"invest {p * .3} in stocks")
+            st.success(
+                f"invest {p * .4} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
+            st.success(f"invest {p * .3} in mutual funds(comparatively less risk in NIFTY50)")
+        high = st.button('high risk')
+        if high:
+            st.success(f"invest {p * .3} in stocks")
+            st.success(f"invest {p * .1} in us stocks")
+            st.success(
+                f"invest {p * .2} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
+            st.success(f"invest {p * .4} in mutual funds(comparatively less risk in NIFTY50)")
+    with c2:
+        st_lottie(lottie_coding_2, height=200, key="idea")
+if selected == "IND Stock tracking":
+    st.subheader('NSE Stock tracking')
+    nse = Nse()
+    c1, c2 = st.columns(2)
+    with c2:
+        st.write("Here there is a list of NSE stocks ⬇⬇")
+        all_stock_codes = nse.get_stock_codes()
+        f = pd.Series(all_stock_codes)
+        st.write(f)
+    with c1:
+        st.write("\n\n\n")
+        st_lottie(lottie_coding_4, height=300, key="nse")
+    inp = st.text_input("enter the symbol to be tracked :").upper()
+    amount = st.number_input("enter the total amount you initially invested for buying the stock :")
+    no_of_stocks = st.slider("enter the number of stocks you bought: ")
+    st.write("you choose", no_of_stocks)
+    st.write("Click the below IND stock button to view the necessary information")
+    ind = st.button('IND stocks')
+    if ind:
+        with st.spinner(text='In progress'):
+            time.sleep(4)
+        try:
+            q = nse.get_quote(inp)
+            v = pd.Series(q)
+            st.success(f"close price of the day : {v['closePrice']}")
+            st.success(f"date :{v['secDate']}")
+            st.success(f"price change :{v['change']}")
+            st.success(f"day low :{v['dayLow']}")
+            st.success(f"day high :{v['dayHigh']}")
+            profit_loss = float((v['closePrice'] - (amount / no_of_stocks)) * no_of_stocks)
+            st.write("If you have a plan to sell the stock now, then check the value of your stock ⬇⬇⬇")
+            if profit_loss > 0:
+                st.success(f"your profit will be :{profit_loss}")
+            else:
+                st.error(f"you are gonna loss {abs(profit_loss)}")
+        except:
+            st.error('Symbol you entered does not exist')
+if selected == "US stocks tracking":
+    st.write("Here there is list of info")
+    sy = st.text_input("enter the ticker to be tracked ")
+    amount = st.number_input("enter the total amount you initially invested for buying the stock :")
+    no_of_stocks = st.slider("enter the number of stocks you bought: ")
+    c1,c2 =st.columns(2)
+    with c2:
+        st.write("Click the below US stock button to view the necessary information")
+        us = st.button('US stocks')
+        if us:
+            with st.spinner(text='In progress'):
+                time.sleep(4)
+            try:
+                t = yf.Ticker(sy)
+                s = t.info
+                p = pd.Series(s)
+                st.success(f"PreviousClose : {p['previousClose']}")
+                st.success(f"CurrentPrice : {p['currentPrice']}")
+                st.success(f"Day high : {p['dayHigh']}")
+                st.success(f"Day low : {p['dayLow']}")
+                profit_loss = float((p['currentPrice'] - (amount / no_of_stocks)) * no_of_stocks)
+                st.write("If you have a plan to sell the stock now, then check the value of your stock ⬇⬇⬇")
+                if profit_loss > 0:
+                    st.success(f"your profit will be :{profit_loss}")
+                else:
+                    st.error(f"you are gonna loss {abs(profit_loss)}")
+            except:
+                st.error("Symbol you entered does not exist")
+    with c1:
+        st.write("\n\n\n")
+        st_lottie(lottie_coding_3, height=200, key="dollar")
