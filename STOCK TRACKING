@@ -2,6 +2,7 @@ import time
 import pandas as pd
 import streamlit as st
 from PIL import Image
+from pygments.formatters import img
 from streamlit_option_menu import option_menu
 from nsetools import Nse
 import requests
@@ -16,6 +17,12 @@ def load_lottie(url):
     return r.json()
 
 
+st.set_page_config(
+    page_title="Stocks",
+    page_icon="dollar",
+    layout="wide"
+)
+
 lottie_coding = load_lottie("https://assets8.lottiefiles.com/packages/lf20_i2eyukor.json")
 lottie_coding_1 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_rMIWDc0fSB.json")
 lottie_coding_2 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_ky2ondsa.json")
@@ -24,9 +31,19 @@ lottie_coding_4 = load_lottie("https://assets7.lottiefiles.com/private_files/lf3
 selected = option_menu(
     menu_title=None,
     options=["Home", "Investment idea", "IND Stock tracking", "US stocks tracking"],
-    icons=["house", "lightbulb", "coin", "coin"],
+    icons=["house", "lightbulb", "cash", "coin"],
     orientation='horizontal',
 )
+st.markdown("""
+<style>
+body {
+  background: #ff0099; 
+  background: -webkit-linear-gradient(to right, #ff0099, #493240); 
+  background: linear-gradient(to right, #ff0099, #493240); 
+}
+</style>
+    """, unsafe_allow_html=True)
+
 if selected == "Home":
     st.header('STOCK TRACKING AND INVESTMENT IDEAS')
     st.write("\n\n")
@@ -39,27 +56,61 @@ if selected == "Home":
                      "ownership in the company, as well as a claim on its assets and profits.\nStocks are given out by "
                      "companies at a specific rate per share to interested\ninvestors for a variety of purposes such "
                      "as "
-                     "raising capital, funding expansion or paying off the company's debts.", unsafe_allow_html=True)
+                     "raising capital, funding expansion or paying off the company's debts."
+                     "\n"
+                     "\n", unsafe_allow_html=True)
     with st.container():
         with c2:
             st.subheader('KEY TAKEAWAYS')
-            st.write("📌 Investing is the act of committing money or capital to an endeavor with the expectation of "
-                     "obtaining additional income or profit.")
-            st.write("📌 Unlike consuming, investing puts money to work so it can grow overtime.")
-            st.write("📌 However, investing also comes with the risk of losses.")
-            st.write("📌 The stock market is a common way for investors, no matter their experience, to invest for a "
-                     "lifetime.")
-            st.write("📌 Beginning investors can get help from expert advisors, leave their portfolio selection and "
-                     "management to robo-advisors, or take a DIY approach to investing in stocks")
+            st.write(
+                "📌 <h5>Investing is the act of committing money or capital to an endeavor with the expectation of "
+                "obtaining additional income or profit.", unsafe_allow_html=True)
+            st.write("📌 <h5>Unlike consuming, investing puts money to work so it can grow overtime.",
+                     unsafe_allow_html=True)
+            st.write("📌 <h5>However, investing also comes with the risk of losses.", unsafe_allow_html=True)
+            st.write("📌 <h5>The stock market is a common way for investors, no matter their experience, to invest "
+                     "for a "
+                     "lifetime.", unsafe_allow_html=True)
+            st.write(
+                "📌 <h5>Beginning investors can get help from expert advisors, leave their portfolio selection and "
+                "management to robo-advisors, or take a DIY approach to investing in stocks", unsafe_allow_html=True)
+            st.write("****")
+            st.write(
+                "<h5>smallcases are a new way to invest in stocks. A smallcase is an intelligently weighted basket of "
+                "upto 50 stocks that reflects a theme, idea or strategy. "
+                "You can choose a smallcase based on a theme that you are positive on, invest in it in 3 clicks and "
+                "track "
+                "& manage multiple portfolios seamlessly."
+                "smallcases aren't a means of recommending or advising investors. Choosing a smallcase is upto each"
+                "individual. "
+                "smallcase have features like RE-BALANCING meaning group of stock you added(i.e suggested based on a"
+                "particular theme) in your account may be at risk or not performing well."
+                "smallcase may ask you to sell some of the stocks to maintain a balance in your portfolio",
+                unsafe_allow_html=True)
+            st.caption(" *Click here to know more about* [link](https://www.smallcase.com/)")
+            st.write("****")
     with c1:
-        st.markdown("###")
+        st.markdown("****")
         st_lottie(lottie_coding, height=300, key="streak")
+        st.write("*****")
+        st.write('''# "In investing, what is comfortable is rarely profitable. - By Robert Arnott "''')
+        st.write("*****")
+        st.write("# Do you know about SmallCase???")
+        st.write('# A smallcase is a basket of stocks that reflects an idea')
+        image = Image.open('C:/Users/Admin/Downloads/sm.png')
+        st.image(image, width=160, use_column_width=160)
+        st.write("****")
+    st.write(
+        '''# "l will tell you how to become rich. Close the doors. Be fearful when others are greedy. Be greedy when others are fearful." — By Warren Buffett"''')
 if selected == "Investment idea":
     st.subheader('INVESTMENT IDEAS')
+    st.caption("!!!DISCLAIMER THE BELOW SUGGESTION ARE BASED ON SOME MATHEMATICAL MODEL FOR PROGRAMMING PURPOSE. WE "
+               "ARE NOT INFLUENCING OR WANT YOU TO INVEST. MAKE YOUR OWN RESEARCH BEFORE INVESTING!!!")
     n = st.number_input('enter you salary')
     p = st.number_input('enter the amount you can invest')
     st.write("\n")
     st.write("\n")
+    st.subheader("Click the risk factor accordingly ⬇⬇⬇")
     c1, c2 = st.columns(2)
     with c1:
         low = st.button('low risk')
@@ -83,12 +134,78 @@ if selected == "Investment idea":
             st.success(f"invest {p * .4} in mutual funds(comparatively less risk in NIFTY50)")
     with c2:
         st_lottie(lottie_coding_2, height=200, key="idea")
+    st.markdown("<center><h4>Basics of Investing</center>", unsafe_allow_html=True)
+    st.write(
+        "<center>Jargons getting irritating? Kick-start your learning by understanding the basics of stock market investing</center>",
+        unsafe_allow_html=True)
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown('''<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle" viewBox="0 0 16 16">
+          <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM9.283 4.002V12H7.971V5.338h-.065L6.072 6.656V5.385l1.899-1.383h1.312Z"/>
+        </svg><center><h6>Elementary economics</h6></center>
+                            <center>Decode the general state of an economy and drivers that lead to the economic growth of a 
+                            country. Learn how GDP is calculated and how it’s connected to economic growth. Understand 
+                            inflation, stagflation and how they impact your investments</center>''',
+                        unsafe_allow_html=True)
+        with col2:
+            i1 = Image.open('C:/Users/Admin/Downloads/one.jpg')
+            st.image(i1, width=250, use_column_width=250)
+        st.write("****")
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            i2 = Image.open('C:\\Users\\Admin\\Downloads\\two.jpg')
+            st.image(i2, width=250, use_column_width=250)
+        with col2:
+            st.markdown('''<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi 
+                        bi-2-circle" viewBox="0 0 16 16"> <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 
+                        0ZM6.646 6.24v.07H5.375v-.064c0-1.213.879-2.402 2.637-2.402 1.582 0 2.613.949 2.613 2.215 0 1.002-.6 
+                        1.667-1.287 2.43l-.096.107-1.974 2.22v.077h3.498V12H5.422v-.832l2.97-3.293c.434-.475.903-1.008.903-1.705 
+                        0-.744-.557-1.236-1.313-1.236-.843 0-1.336.615-1.336 1.306Z"/> </svg><center><h6>Equity 
+                        markets</h6></center><center>A guided introduction to equity market participants, trading mechanisms, 
+                        indices, financial & investment ratios and key metrics one should look at before investing. Also included is 
+                        a primer to technical analysis for stocks</center>''', unsafe_allow_html=True)
+        st.write("****")
+    with st.container():
+        col1, col2 = st.columns(2)
+        with col1:
+            st.markdown('''<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi 
+            bi-3-circle" viewBox="0 0 16 16"> <path d="M7.918 8.414h-.879V7.342h.838c.78 0 1.348-.522 1.342-1.237 
+            0-.709-.563-1.195-1.348-1.195-.79 0-1.312.498-1.348 1.055H5.275c.036-1.137.95-2.115 2.625-2.121 1.594-.012 
+            2.608.885 2.637 2.062.023 1.137-.885 1.776-1.482 1.875v.07c.703.07 1.71.64 1.734 1.917.024 1.459-1.277 
+            2.396-2.93 2.396-1.705 0-2.707-.967-2.754-2.144H6.33c.059.597.68 1.06 1.541 1.066.973.006 1.6-.563 
+            1.588-1.354-.006-.779-.621-1.318-1.541-1.318Z"/> <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM1 8a7 7 0 1 0 
+            14 0A7 7 0 0 0 1 8Z"/> </svg><center><h6>Investing in portfolios</h6></center><center>Read about the 
+            importance of portfolio investing and benefits of diversification. Learn how to calculate a portfolio's 
+            return, how to construct portfolios and how to benchmark and track the portfolio's performance</center>''',
+                        unsafe_allow_html=True)
+        with col2:
+            i3 = Image.open("C:/Users/Admin/Downloads/three.png")
+            st.write('\t\t')
+            st.image(i3, width=250, use_column_width=250)
+        st.write("****")
+    with st.container():
+        col1 , col2 = st.columns(2)
+        with col2:
+            st.markdown('''<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi 
+            bi-4-circle" viewBox="0 0 16 16"> <path d="M7.519 
+            5.057c.22-.352.439-.703.657-1.055h1.933v5.332h1.008v1.107H10.11V12H8.85v-1.559H4.978V9.322c.77-1.427 
+            1.656-2.847 2.542-4.265ZM6.225 9.281v.053H8.85V5.063h-.065c-.867 1.33-1.787 2.806-2.56 4.218Z"/> <path d="M16 
+            8A8 8 0 1 1 0 8a8 8 0 0 1 16 0ZM1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Z"/> </svg><center><h6>Evaluating 
+            stocks</h6>Detailed walkthrough of different filters, ratios, attributes and parameters to evaluate stocks. 
+            Learn how to apply these filters inside screener and the rationale behind each filter, along with a guide on 
+            creating custom filters</center>''',unsafe_allow_html=True)
+        with col1:
+            i4 = Image.open("C:/Users/Admin/Downloads/four.jpg")
+            st.image(i4,width=250,use_column_width=250)
+        st.write("****")
 if selected == "IND Stock tracking":
     st.subheader('NSE Stock tracking')
     nse = Nse()
     c1, c2 = st.columns(2)
     with c2:
-        st.write("Here there is a list of NSE stocks ⬇⬇")
+        st.write("Here there is a list of NSE stocks ⬇⬇⬇")
         all_stock_codes = nse.get_stock_codes()
         f = pd.Series(all_stock_codes)
         st.write(f)
@@ -125,7 +242,7 @@ if selected == "US stocks tracking":
     sy = st.text_input("enter the ticker to be tracked ")
     amount = st.number_input("enter the total amount you initially invested for buying the stock :")
     no_of_stocks = st.slider("enter the number of stocks you bought: ")
-    c1,c2 =st.columns(2)
+    c1, c2 = st.columns(2)
     with c2:
         st.write("Click the below US stock button to view the necessary information")
         us = st.button('US stocks')
@@ -150,4 +267,11 @@ if selected == "US stocks tracking":
                 st.error("Symbol you entered does not exist")
     with c1:
         st.write("\n\n\n")
-        st_lottie(lottie_coding_3, height=200, key="dollar")
+        st_lottie(lottie_coding_3, height=250, key="dollar")
+    b = st.button("Click to view all information")
+    if b:
+        st.write("Refer for more information about the company ⬇⬇⬇")
+        t = yf.Ticker(sy)
+        s = t.info
+        p = pd.Series(s)
+        st.write(p)
