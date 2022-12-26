@@ -1,6 +1,5 @@
 from datetime import datetime
 import time
-import requests
 import pandas as pd
 import streamlit as st
 from PIL import Image
@@ -8,7 +7,6 @@ from streamlit_option_menu import option_menu
 from nsetools import Nse
 import requests
 from streamlit_lottie import st_lottie
-import yfinance as yf
 import csv
 
 
@@ -20,7 +18,7 @@ def load_lottie(url):
 
 
 st.set_page_config(
-    page_title="Stocks",
+    page_title="exhale",
     page_icon="dollar",
     layout="wide"
 )
@@ -36,6 +34,10 @@ lottie_coding_1 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_rMI
 lottie_coding_2 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_ky2ondsa.json")
 lottie_coding_3 = load_lottie("https://assets3.lottiefiles.com/packages/lf20_cohxzcyi.json")
 lottie_coding_4 = load_lottie("https://assets7.lottiefiles.com/private_files/lf30_F3v2Nj.json")
+lottie_coding_5 = load_lottie("https://assets6.lottiefiles.com/private_files/lf30_t150m0i4.json")
+lottie_coding_6 = load_lottie("https://assets9.lottiefiles.com/private_files/lf30_i0cTdc.json")
+lottie_coding_7 = load_lottie("https://assets2.lottiefiles.com/packages/lf20_uonpv3qg.json")
+lottie_coding_8 = load_lottie("https://assets2.lottiefiles.com/packages/lf20_yMpiqXia1k.json")
 selected = option_menu(
     menu_title=None,
     options=["Home", "Investment idea", "IND Stock tracking", "US stocks tracking"],
@@ -49,15 +51,6 @@ selected = option_menu(
         "nav-link-selected": {"background-color": "#D6C5FF"},
     }
 )
-st.markdown("""
-<style>
-body {
-  background: #ff0099; 
-  background: -webkit-linear-gradient(to right, #ff0099, #493240); 
-  background: linear-gradient(to right, #ff0099, #493240); 
-}
-</style>
-    """, unsafe_allow_html=True)
 
 if selected == "Home":
     st.write("\n\n")
@@ -66,6 +59,7 @@ if selected == "Home":
         with c2:
             st_lottie(lottie_coding_1, height=300, key="coding")
         with c1:
+            st.write("<h2>Stocks", unsafe_allow_html=True)
             st.write("<h3>A stock of a company is essentially a type of financial instrument that offers a\ndegree of "
                      "ownership in the company, as well as a claim on its assets and profits.\nStocks are given out by "
                      "companies at a specific rate per share to interested\ninvestors for a variety of purposes such "
@@ -136,25 +130,52 @@ if selected == "Investment idea":
     with c1:
         low = st.button('low risk')
         if low:
-            st.success(f"invest {p * .2} in stocks")
+            st.markdown("<h5>The below mentioned list is an idea to start your investment journey",
+                        unsafe_allow_html=True)
+            st.success(f"invest {p * .2} in IND stocks")
             st.success(
                 f"invest {p * .6} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
             st.success(f"invest {p * .2} in mutual funds(comparatively less risk in NIFTY50)")
         medium = st.button('medium risk')
         if medium:
-            st.success(f"invest {p * .3} in stocks")
+            st.markdown("<h5>The below mentioned list is an idea to start your investment journey",
+                        unsafe_allow_html=True)
+            st.success(f"invest {p * .3} in IND stocks")
             st.success(
                 f"invest {p * .4} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
             st.success(f"invest {p * .3} in mutual funds(comparatively less risk in NIFTY50)")
         high = st.button('high risk')
         if high:
-            st.success(f"invest {p * .3} in stocks")
+            st.markdown("<h5>The below mentioned list is an idea to start your investment journey",
+                        unsafe_allow_html=True)
+            st.success(f"invest {p * .3} in IND stocks")
             st.success(f"invest {p * .1} in us stocks")
             st.success(
                 f"invest {p * .2} in fixed income(like government bonds,term deposit,fixed deposit,gold Sovereign bonds)")
             st.success(f"invest {p * .4} in mutual funds(comparatively less risk in NIFTY50)")
     with c2:
         st_lottie(lottie_coding_2, height=200, key="idea")
+    with st.container():
+        st.header("Always consider the below mentioned points before investing in asserts ⬇⬇⬇")
+        st.markdown(
+            "<h5>✔ Your financial goals: What do you want to achieve with your investments? If you have a long-term "
+            "goal,"
+            "such as saving for retirement, you may be able to afford to take on more risk and invest a higher "
+            "percentage of your salary in stocks. On the other hand, if you have a shorter-term goal, such as saving "
+            "for a down payment on a house, you may want to invest a smaller percentage of your salary in stocks and "
+            "allocate more to lower-risk investments.",unsafe_allow_html=True)
+        st.markdown(
+            "<h5>✔ Your risk tolerance: How comfortable are you with the possibility of losing money in your "
+            "investments? "
+            "If you are a more risk-averse investor, you may want to invest a smaller percentage of your salary in "
+            "stocks. On the other hand, if you are willing to take on more risk in pursuit of higher returns, "
+            "you may be comfortable investing a higher percentage of your salary in stocks.",unsafe_allow_html=True)
+        st.markdown(
+            "<h5>✔ Your overall investment portfolio: What other investments do you have in your portfolio? A "
+            "well-diversified portfolio should include a mix of different asset classes, such as stocks, bonds, "
+            "and cash. The appropriate percentage of your salary to invest in stocks will depend on the overall "
+            "balance of your portfolio.",unsafe_allow_html=True)
+    st.write("\n")
     st.markdown("<center><h4>Basics of Investing</center>", unsafe_allow_html=True)
     st.write(
         "<center>Jargons getting irritating? Kick-start your learning by understanding the basics of stock market investing</center>",
@@ -175,14 +196,16 @@ if selected == "Investment idea":
                 '''<center><a href="https://www.tickertape.in/learn/modules/economics-101/intro-to-macro-economics/">click here to know more information</a></center>''',
                 unsafe_allow_html=True)
         with col2:
-            i1 = Image.open('C:/Users/Admin/Downloads/one.jpg')
-            st.image(i1, width=250, use_column_width=250)
+            #i1 = Image.open('C:/Users/Admin/Downloads/one.jpg')
+            st_lottie(lottie_coding_5, height=300, key="eco")
+            #st.image(i1, width=250, use_column_width=250)
         st.write("****")
     with st.container():
         col1, col2 = st.columns(2)
         with col1:
-            i2 = Image.open('C:\\Users\\Admin\\Downloads\\two.jpg')
-            st.image(i2, width=250, use_column_width=250)
+            #i2 = Image.open('C:\\Users\\Admin\\Downloads\\two.jpg')
+            #st.image(i2, width=250, use_column_width=250)
+            st_lottie(lottie_coding_6, height=300, key="market")
         with col2:
             st.markdown('''<div style="text-align:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi 
                         bi-2-circle" viewBox="0 0 16 16"> <path d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8Zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 
@@ -213,9 +236,10 @@ if selected == "Investment idea":
                 '''<center><a href="https://www.tickertape.in/learn/modules/portfolio-investing-explained/what-is-a-portfolio/">click here to know more information</a></center>''',
                 unsafe_allow_html=True)
         with col2:
-            i3 = Image.open("C:/Users/Admin/Downloads/three.png")
+            #i3 = Image.open("C:/Users/Admin/Downloads/three.png")
             st.write('\t\t')
-            st.image(i3, width=250, use_column_width=250)
+            #st.image(i3, width=250, use_column_width=250)
+            st_lottie(lottie_coding_7, height=300, key="port")
         st.write("****")
     with st.container():
         col1, col2 = st.columns(2)
@@ -233,15 +257,16 @@ if selected == "Investment idea":
                 unsafe_allow_html=True)
 
         with col1:
-            i4 = Image.open("C:/Users/Admin/Downloads/four.jpg")
-            st.image(i4, width=250, use_column_width=250)
+            #i4 = Image.open("C:/Users/Admin/Downloads/four.jpg")
+            #st.image(i4, width=250, use_column_width=250)
+            st_lottie(lottie_coding_8, height=300, key="st")
         st.write("****")
 if selected == "IND Stock tracking":
     st.subheader('NSE Stock tracking')
     nse = Nse()
     c1, c2 = st.columns(2)
     with c2:
-        st.write("Here there is a list of NSE stocks ⬇⬇⬇")
+        st.write("<h4>List of NSE stocks ⬇⬇⬇",unsafe_allow_html=True)
         all_stock_codes = nse.get_stock_codes()
         f = pd.Series(all_stock_codes)
         st.write(f)
@@ -277,7 +302,7 @@ if selected == "US stocks tracking":
 
     st.write("Here there is list of info")
     sy = st.text_input("enter the ticker to be tracked ").upper()
-    amount = st.number_input("enter the total amount you initially invested for buying the stock :")
+    amount = st.number_input("enter the total amount you initially invested for buying the stock (in Dollar):")
     no_of_stocks = st.slider("enter the number of stocks you bought: ")
     c1, c2 = st.columns(2)
     with c2:
@@ -287,15 +312,31 @@ if selected == "US stocks tracking":
             with st.spinner(text='In progress'):
                 time.sleep(4)
             try:
-                t = yf.Ticker(sy)
-                s = t.info
-                p = pd.Series(s)
-                st.success(f"PreviousClose : {p['previousClose']}")
-                st.success(f"CurrentPrice : {p['currentPrice']}")
-                st.success(f"Day high : {p['dayHigh']}")
-                st.success(f"Day low : {p['dayLow']}")
-                profit_loss = float((p['currentPrice'] - (amount / no_of_stocks)) * no_of_stocks)
+                url = "https://alpha-vantage.p.rapidapi.com/query"
+                querystring = {"function": "GLOBAL_QUOTE", "symbol": sy}
+
+                headers = {
+                    "X-RapidAPI-Key": "a51c783d08msh82d02b76527c36ap147861jsn12f3f5caf3e4",
+                    "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com"
+                }
+                response = requests.request("GET", url, headers=headers, params=querystring)
+                rt = response.text
+                p = pd.read_json(rt)
+                st.write(p)
+                print(p)
+                pp = p["Global Quote"][1]
+                cp = p["Global Quote"][7]
+                hp = p["Global Quote"][2]
+                lp = p["Global Quote"][3]
+                pc = p["Global Quote"][8]
+                print(pp)
+                st.success(f"open price of the day :{pp}")
+                st.success(f"close price of the day :{cp}")
+                st.success(f"Highest price of the day :{hp}")
+                st.success(f"Lowest price of the day :{lp}")
+                st.success(f"price change of the day :{pc}")
                 st.write("If you have a plan to sell the stock now, then check the value of your stock ⬇⬇⬇")
+                profit_loss = float((float(cp) - (amount / no_of_stocks)) * no_of_stocks)
                 if profit_loss > 0:
                     st.success(f"your profit will be :{profit_loss}")
                 else:
@@ -307,15 +348,31 @@ if selected == "US stocks tracking":
                     cr = csv.reader(decoded_content.splitlines(), delimiter=',')
                     my_list = list(cr)
                     f = pd.DataFrame(my_list)
-                    st.dataframe(f)
-                    st.download_button("Download CSV",f.to_csv(),file_name=sy+' STOCKS DATA'+str(datetime.now())+'.csv',mime='text/csv')
+                    f1 =f[['timestamp','open']]
+                    st.write(f1)
+                    st.line_chart(f1)
+                    st.download_button("Download CSV(INTRADAY)",f.to_csv(),file_name=sy+' STOCKS DATA'+str(datetime.now())+'.csv', mime='text/csv')
+                CSV_URL1 = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol='+ sy +'&apikey=9B3RPQVRIOXMBDWP&datatype=csv'
+                with requests.Session() as s:
+                    download = s.get(CSV_URL1)
+                    decoded_content = download.content.decode('utf-8')
+                    cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+                    my_list = list(cr)
+                    f = pd.DataFrame(my_list)
+                    st.download_button("Download CSV(WEEKLY)", f.to_csv(),
+                                       file_name=sy + ' STOCKS DATA' + str(datetime.now()) + '.csv', mime='text/csv')
+                CSV_URL2 = 'https://www.alphavantage.co/query?function=TIME_SERIES_MONTHLY&symbol='+ sy +'&apikey=9B3RPQVRIOXMBDWP&datatype=csv'
+                with requests.Session() as s:
+                    download = s.get(CSV_URL2)
+                    decoded_content = download.content.decode('utf-8')
+                    cr = csv.reader(decoded_content.splitlines(), delimiter=',')
+                    my_list = list(cr)
+                    f = pd.DataFrame(my_list)
+                    st.download_button("Download CSV(MONTHLY)", f.to_csv(),
+                                       file_name=sy + ' STOCKS DATA' + str(datetime.now()) + '.csv', mime='text/csv')
             except:
                 st.error("Symbol you entered does not exist")
     with c1:
         st.write("\n\n\n")
         st_lottie(lottie_coding_3, height=250, key="dollar")
         st.write("<h3>Refer for more information about the company ⬇⬇⬇",unsafe_allow_html=True)
-        t = yf.Ticker(sy)
-        s = t.info
-        p = pd.Series(s)
-        st.write(p)
