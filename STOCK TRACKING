@@ -8,7 +8,8 @@ from nsetools import Nse
 import requests
 from streamlit_lottie import st_lottie
 import csv
-
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error
 
 def load_lottie(url):
     r = requests.get(url)
@@ -196,15 +197,11 @@ if selected == "Investment idea":
                 '''<center><a href="https://www.tickertape.in/learn/modules/economics-101/intro-to-macro-economics/">click here to know more information</a></center>''',
                 unsafe_allow_html=True)
         with col2:
-            #i1 = Image.open('C:/Users/Admin/Downloads/one.jpg')
             st_lottie(lottie_coding_5, height=300, key="eco")
-            #st.image(i1, width=250, use_column_width=250)
         st.write("****")
     with st.container():
         col1, col2 = st.columns(2)
         with col1:
-            #i2 = Image.open('C:\\Users\\Admin\\Downloads\\two.jpg')
-            #st.image(i2, width=250, use_column_width=250)
             st_lottie(lottie_coding_6, height=300, key="market")
         with col2:
             st.markdown('''<div style="text-align:center;"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi 
@@ -323,13 +320,11 @@ if selected == "US stocks tracking":
                 rt = response.text
                 p = pd.read_json(rt)
                 st.write(p)
-                print(p)
                 pp = p["Global Quote"][1]
                 cp = p["Global Quote"][7]
                 hp = p["Global Quote"][2]
                 lp = p["Global Quote"][3]
                 pc = p["Global Quote"][8]
-                print(pp)
                 st.success(f"open price of the day :{pp}")
                 st.success(f"close price of the day :{cp}")
                 st.success(f"Highest price of the day :{hp}")
@@ -348,9 +343,6 @@ if selected == "US stocks tracking":
                     cr = csv.reader(decoded_content.splitlines(), delimiter=',')
                     my_list = list(cr)
                     f = pd.DataFrame(my_list)
-                    f1 =f[['timestamp','open']]
-                    st.write(f1)
-                    st.line_chart(f1)
                     st.download_button("Download CSV(INTRADAY)",f.to_csv(),file_name=sy+' STOCKS DATA'+str(datetime.now())+'.csv', mime='text/csv')
                 CSV_URL1 = 'https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol='+ sy +'&apikey=9B3RPQVRIOXMBDWP&datatype=csv'
                 with requests.Session() as s:
@@ -372,7 +364,48 @@ if selected == "US stocks tracking":
                                        file_name=sy + ' STOCKS DATA' + str(datetime.now()) + '.csv', mime='text/csv')
             except:
                 st.error("Symbol you entered does not exist")
+
     with c1:
         st.write("\n\n\n")
         st_lottie(lottie_coding_3, height=250, key="dollar")
-        st.write("<h3>Refer for more information about the company ⬇⬇⬇",unsafe_allow_html=True)
+        st.title('Stock Prediction')
+        prediction = st.button('Predict')
+        if prediction:
+            # Fetch stock data from Alpha Vantage
+            url = "https://www.alphavantage.co/query"
+            params = {
+                "function": "TIME_SERIES_DAILY_ADJUSTED",
+                "symbol": sy,
+                "apikey": "9B3RPQVRIOXMBDWP"
+            }
+            response = requests.get(url, params=params)
+            data = response.json()
+
+            # Preprocess and clean the data
+            df = pd.DataFrame.from_dict(data['Time Series (Daily)'], orient='index')
+            df = df.reset_index()
+            df.columns = ['date', 'open', 'high', 'low', 'close', 'adj_close', 'volume','useless1','useless2']
+            #st.write(df)
+            df['date'] = pd.to_datetime(df['date'])
+            df['open'] = pd.to_numeric(df['open'])
+            df['high'] = pd.to_numeric(df['high'])
+            df['low'] = pd.to_numeric(df['low'])
+            df['close'] = pd.to_numeric(df['close'])
+            df['volume'] = pd.to_numeric(df['volume'])
+            df['adj_close'] = pd.to_numeric(df['adj_close'])
+            df = df.sort_values('date')
+            st.write(df)
+
+            # Build the prediction model
+            X = df[['open', 'high', 'low', 'volume']][0:70]
+            y = df['close'][0:70]
+            model = RandomForestRegressor()
+            model.fit(X, y)
+            # Make predictions and display the results
+            prediction = model.predict(X[-70:])
+            st.write(prediction)
+            mae = mean_absolute_error(y,prediction)
+            st.write("mean absolute error :" + str(mae))
+            st.write(mae)
+            st.write("<h3>The line chart shows the predicted close price of the stock",unsafe_allow_html=True)
+            st.line_chart(prediction)
